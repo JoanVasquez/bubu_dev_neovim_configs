@@ -1,0 +1,207 @@
+# ===== Starship: Catppuccin clean coder (NO boxes) =====
+
+add_newline = true
+command_timeout = 1200
+
+palette = "catppuccin_mocha"
+
+[palettes.catppuccin_mocha]
+base = "#1e1e2e"
+text = "#cdd6f4"
+subtext = "#a6adc8"
+muted = "#6c7086"
+blue = "#89b4fa"
+lavender = "#b4befe"
+sapphire = "#74c7ec"
+teal = "#94e2d5"
+green = "#a6e3a1"
+yellow = "#f9e2af"
+peach = "#fab387"
+red = "#f38ba8"
+mauve = "#cba6f7"
+pink = "#f5c2e7"
+
+# A clean 2-line prompt:
+# line1: context (dir + git)
+# line2: tools/env (docker/k8s/tf/aws + runtimes + stack tags)
+format = """
+$os$username$hostname • $directory • $git_branch$git_status$git_state$cmd_duration
+$docker_context$kubernetes$terraform$aws$nodejs$python$java$custom
+$character
+"""
+
+# --- Basics ---
+[os]
+disabled = false
+format = "[$symbol]($style) "
+style = "fg:mauve bold"
+
+[username]
+show_always = false
+format = "[$user]($style_user) "
+style_user = "fg:pink bold"
+
+[hostname]
+ssh_only = true
+format = "[@$hostname]($style) "
+style = "fg:muted bold"
+
+[directory]
+truncation_length = 4
+truncate_to_repo = true
+format = "[$path]($style)$read_only "
+style = "fg:sapphire bold"
+read_only = ""
+read_only_style = "fg:red bold"
+
+# --- Git ---
+[git_branch]
+symbol = " "
+format = "[$symbol$branch]($style) "
+style = "fg:green bold"
+
+[git_status]
+format = "[$all_status$ahead_behind]($style) "
+style = "fg:red bold"
+conflicted = "⚔ "
+ahead = "⇡${count} "
+behind = "⇣${count} "
+diverged = "⇕⇡${ahead_count}⇣${behind_count} "
+untracked = "?${count} "
+stashed = "✭${count} "
+modified = "!${count} "
+staged = "+${count} "
+renamed = "»${count} "
+deleted = "✘${count} "
+
+[git_state]
+format = "[$state( $progress_current/$progress_total)]($style) "
+style = "fg:muted"
+
+# --- Command duration (only shows when it matters) ---
+[cmd_duration]
+min_time = 500
+format = "[$duration]($style) "
+style = "fg:muted"
+
+# --- Prompt char ---
+[character]
+success_symbol = "[❯❯](fg:mauve bold) "
+error_symbol = "[❯❯](fg:red bold) "
+vimcmd_symbol = "[❮❮](fg:green bold) "
+
+# --- Docker ---
+[docker_context]
+only_with_files = true
+format = "[docker:$context]($style) "
+style = "fg:teal bold"
+
+# --- Kubernetes ---
+[kubernetes]
+disabled = false
+format = "[k8s:$context]($style) "
+style = "fg:lavender bold"
+detect_files = ["k8s.yaml", "k8s.yml", "helmfile.yaml", "Chart.yaml", "skaffold.yaml"]
+detect_folders = ["k8s", "helm", ".kube"]
+detect_extensions = ["yaml", "yml"]
+
+# --- Terraform ---
+[terraform]
+disabled = false
+format = "[tf:$workspace]($style) "
+style = "fg:peach bold"
+detect_files = ["main.tf", "terragrunt.hcl"]
+
+# --- AWS ---
+[aws]
+disabled = false
+format = "[aws:$region]($style) "
+style = "fg:yellow bold"
+
+# --- Runtimes ---
+[nodejs]
+format = "[node:$version]($style) "
+style = "fg:green bold"
+detect_files = ["package.json", ".node-version", ".nvmrc", "pnpm-lock.yaml", "yarn.lock", "package-lock.json"]
+
+[python]
+format = "[py:$version]($style) "
+style = "fg:sapphire bold"
+detect_files = ["pyproject.toml", "requirements.txt", "Pipfile", "poetry.lock", "manage.py"]
+detect_extensions = ["py"]
+
+[java]
+format = "[java:$version]($style) "
+style = "fg:peach bold"
+detect_files = ["pom.xml", "build.gradle", "build.gradle.kts", "mvnw", "gradlew"]
+
+# --- Status (only shows on error) ---
+[status]
+disabled = false
+format = "[$symbol $status]($style) "
+style = "fg:red bold"
+symbol = "✘"
+
+# ===== Custom stack tags (short + clean) =====
+
+[custom.typescript]
+command = "echo ts"
+when = "test -f tsconfig.json"
+format = "[$output]($style) "
+style = "fg:blue bold"
+
+[custom.react]
+command = "echo react"
+when = "test -f package.json && (grep -q '\"react\"' package.json 2>/dev/null || test -f vite.config.ts || test -f next.config.js)"
+format = "[$output]($style) "
+style = "fg:blue bold"
+
+[custom.html]
+command = "echo html"
+when = "ls *.html >/dev/null 2>&1"
+format = "[$output]($style) "
+style = "fg:peach bold"
+
+[custom.css]
+command = "echo css"
+when = "ls *.css >/dev/null 2>&1 || test -f tailwind.config.js || test -f tailwind.config.ts"
+format = "[$output]($style) "
+style = "fg:teal bold"
+
+[custom.sql]
+command = "echo sql"
+when = "ls *.sql >/dev/null 2>&1 || test -f prisma/schema.prisma"
+format = "[$output]($style) "
+style = "fg:yellow bold"
+
+[custom.lua]
+command = "echo lua"
+when = "ls *.lua >/dev/null 2>&1 || test -d .config/nvim"
+format = "[$output]($style) "
+style = "fg:mauve bold"
+
+[custom.yaml]
+command = "echo yaml"
+when = "ls *.yml *.yaml >/dev/null 2>&1"
+format = "[$output]($style) "
+style = "fg:muted bold"
+
+[custom.spring]
+command = "echo spring"
+when = "test -f pom.xml && grep -q 'spring-boot' pom.xml 2>/dev/null || (test -f build.gradle && grep -q 'org.springframework.boot' build.gradle 2>/dev/null)"
+format = "[$output]($style) "
+style = "fg:green bold"
+
+[custom.django]
+command = "echo django"
+when = "test -f manage.py || (test -f pyproject.toml && grep -q 'django' pyproject.toml 2>/dev/null) || (test -f requirements.txt && grep -qi '^django' requirements.txt 2>/dev/null)"
+format = "[$output]($style) "
+style = "fg:green bold"
+
+[custom.fastapi]
+command = "echo fastapi"
+when = "(test -f pyproject.toml && grep -q 'fastapi' pyproject.toml 2>/dev/null) || (test -f requirements.txt && grep -qi '^fastapi' requirements.txt 2>/dev/null)"
+format = "[$output]($style) "
+style = "fg:sapphire bold"
+
+
